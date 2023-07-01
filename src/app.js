@@ -2,6 +2,7 @@ import express from 'express';
 import morgan from 'morgan';
 import productRoutes from '../api/routes/products.js';
 import productOrders from '../api/routes/orders.js';
+import bodyParser from 'body-parser';
 //The app constant represents the Express application
 //and will be used to define the server's behavior
 //and handle incoming HTTP requests
@@ -9,6 +10,8 @@ const app = express();
 
 //const productRoutes = require('../api/routes/products');
 app.use(morgan('dev'));
+app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.json());
 //Set up a middleware function that will be executed
 //for every incoming request to the server
 //It then defines a middleware function using app.use()
