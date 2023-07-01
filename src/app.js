@@ -1,16 +1,18 @@
 import express from 'express';
+import morgan from 'morgan';
 import productRoutes from '../api/routes/products.js';
-//The app constant represents the Express application 
-//and will be used to define the server's behavior 
+import productOrders from '../api/routes/orders.js';
+//The app constant represents the Express application
+//and will be used to define the server's behavior
 //and handle incoming HTTP requests
 const app = express();
 
 //const productRoutes = require('../api/routes/products');
-
-//Set up a middleware function that will be executed 
-//for every incoming request to the server 
-//It then defines a middleware function using app.use() 
-//to handle incoming requests and 
+app.use(morgan('dev'));
+//Set up a middleware function that will be executed
+//for every incoming request to the server
+//It then defines a middleware function using app.use()
+//to handle incoming requests and
 //send a JSON response with the message 'It works!'
 /*app.use((req, res, next) => {
     res.status(200).json({
@@ -18,5 +20,21 @@ const app = express();
     });
 });*/
 app.use('/products', productRoutes);
+app.use('/orders', productOrders);
+
+app.use((req, res, next) => {
+	const error = new Error('Not found');
+	error.status = 404;
+	next(error);
+});
+
+app.use((error, req, res, next) => {
+	res.status(error.status || 500);
+	res.json({
+		error: {
+			message: error.message,
+		},
+	});
+});
 
 export default app;
