@@ -10,7 +10,7 @@ const app = express();
 
 //const productRoutes = require('../api/routes/products');
 app.use(morgan('dev'));
-app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 //Set up a middleware function that will be executed
 //for every incoming request to the server
@@ -22,6 +22,22 @@ app.use(bodyParser.json());
         message: 'It works!'
     });
 });*/
+app.use((req, res, next) => {
+	res.header('Access-Control-Allow-Origin', '*');
+	res.header(
+		'Access-Control-Allow-Headers',
+		'Origin, X-Requested-With, Content-Type, Accept, Authorization'
+	);
+	if (req.method === 'OPTIONS') {
+		res.header(
+			'Access-Control-Allow-Methods',
+			'PUT, POST, PATCH, DELETE, GET'
+		);
+		return res.status(200).json({});
+	}
+    next();
+});
+
 app.use('/products', productRoutes);
 app.use('/orders', productOrders);
 
